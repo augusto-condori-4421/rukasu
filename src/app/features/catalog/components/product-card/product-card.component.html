@@ -1,0 +1,77 @@
+<!-- ─── PRODUCT CARD ──────────────────────────────────────────
+     Corner brackets appear on hover via Tailwind group + spans
+     ─────────────────────────────────────────────────────────── -->
+<article
+  (click)="viewDetail()"
+  class="group relative bg-surface border border-border rounded-xl overflow-hidden
+         cursor-pointer transition-all duration-300
+         hover:border-accent hover:shadow-[0_0_20px_-5px_var(--accent)]
+         hover:-translate-y-1"
+  [attr.aria-label]="'Ver detalle de ' + product().name"
+>
+  <!-- Corner bracket TL -->
+  <span class="absolute top-3 left-3 w-4 h-4 border-t-2 border-l-2 border-accent
+               opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10 pointer-events-none"></span>
+  <!-- Corner bracket TR -->
+  <span class="absolute top-3 right-3 w-4 h-4 border-t-2 border-r-2 border-accent
+               opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10 pointer-events-none"></span>
+  <!-- Corner bracket BL -->
+  <span class="absolute bottom-3 left-3 w-4 h-4 border-b-2 border-l-2 border-accent
+               opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10 pointer-events-none"></span>
+  <!-- Corner bracket BR -->
+  <span class="absolute bottom-3 right-3 w-4 h-4 border-b-2 border-r-2 border-accent
+               opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10 pointer-events-none"></span>
+
+  <!-- Product image (responsive: mobile URL on small screens, desktop on md+) -->
+  <div class="relative aspect-square overflow-hidden bg-surface-2">
+    <picture>
+      @if (product().image_url_desktop) {
+        <source media="(min-width: 768px)" [attr.srcset]="product().image_url_desktop">
+      }
+      <img
+        [src]="product().image_url_mobile || product().image_url_desktop || 'logo.webp'"
+        [alt]="product().name"
+        loading="lazy"
+        class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+      >
+    </picture>
+
+    <!-- Quick view overlay -->
+    <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100
+                transition-opacity duration-300 flex items-center justify-center">
+      <span class="flex items-center gap-1.5 text-white text-sm font-medium
+                   bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-4 py-1.5">
+        <ng-icon name="heroEye" size="16" />
+        Ver detalle
+      </span>
+    </div>
+  </div>
+
+  <!-- Card body -->
+  <div class="p-4 flex flex-col gap-3">
+    <!-- Name -->
+    <div>
+      <h3 class="font-semibold text-foreground text-sm leading-tight line-clamp-2">
+        {{ product().name }}
+      </h3>
+    </div>
+
+    <!-- Price + Add button -->
+    <div class="flex items-center justify-between gap-2 mt-auto">
+      <p class="text-accent font-display text-lg">
+        {{ product().price | price }}
+      </p>
+      <button
+        (click)="addToCart($event)"
+        id="btn-add-{{ product().id_prod }}"
+        aria-label="Agregar al carrito"
+        class="flex items-center gap-1.5 bg-accent text-accent-fg text-xs font-bold
+               px-3 py-1.5 rounded-lg transition-all duration-200
+               hover:shadow-[0_0_12px_var(--accent)] hover:scale-105 active:scale-95"
+      >
+        <ng-icon name="heroPlus" size="14" />
+        Agregar
+      </button>
+    </div>
+  </div>
+</article>

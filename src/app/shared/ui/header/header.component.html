@@ -1,0 +1,71 @@
+<!-- ──────────────────────────────────────────────────────────
+     HEADER — fixed, scroll-aware background, mobile-friendly
+     ────────────────────────────────────────────────────────── -->
+<header class="fixed top-0 inset-x-0 z-50 transition-all duration-300" [class.bg-surface]="isScrolled()"
+  [class.border-b]="isScrolled()" [class.border-border]="isScrolled()" [class.backdrop-blur-md]="isScrolled()">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-16">
+
+      <!-- Logo -->
+      <a routerLink="/" (click)="closeMobile()" class="flex items-center gap-2 group">
+        <img src="logo.webp" alt="Rukasu Design logo"
+          class="h-9 w-auto transition-transform duration-300 group-hover:scale-105">
+      </a>
+
+      <!-- Desktop Nav -->
+      <nav class="hidden md:flex items-center gap-6" aria-label="Navegación principal">
+        <a routerLink="/" routerLinkActive="text-accent" [routerLinkActiveOptions]="{ exact: true }"
+          class="text-sm font-medium text-muted hover:text-foreground transition-colors duration-200 tracking-wide uppercase">
+          RUKASU
+        </a>
+      </nav>
+
+      <!-- Actions -->
+      <div class="flex items-center gap-2">
+
+        <!-- Theme toggle -->
+        <button id="btn-theme-toggle" (click)="toggleTheme()" aria-label="Cambiar tema"
+          class="p-2 rounded-lg text-muted hover:text-accent hover:bg-surface-2 transition-all duration-200">
+          @if (theme.isDark()) {
+          <ng-icon name="heroSun" size="20" />
+          } @else {
+          <ng-icon name="heroMoon" size="20" />
+          }
+        </button>
+
+        <!-- Cart button -->
+        <button id="btn-cart" (click)="cart.toggleCart()" aria-label="Ver carrito"
+          class="relative p-2 rounded-lg text-muted hover:text-accent hover:bg-surface-2 transition-all duration-200">
+          <ng-icon name="heroShoppingCart" size="20" />
+          @if (cart.totalUnits() > 0) {
+          <span class="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] flex items-center justify-center
+                     text-[10px] font-bold rounded-full bg-accent text-accent-fg px-1
+                     animate-[scale-in_0.2s_ease]">
+            {{ cart.totalUnits() }}
+          </span>
+          }
+        </button>
+
+        <!-- Mobile menu toggle -->
+        <button id="btn-mobile-menu" (click)="toggleMobile()" aria-label="Abrir menú"
+          class="md:hidden p-2 rounded-lg text-muted hover:text-foreground hover:bg-surface-2 transition-all duration-200">
+          @if (mobileMenuOpen()) {
+          <ng-icon name="heroXMark" size="22" />
+          } @else {
+          <ng-icon name="heroBars3" size="22" />
+          }
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile dropdown nav -->
+  @if (mobileMenuOpen()) {
+  <div class="md:hidden border-t border-border bg-surface/95 backdrop-blur-md px-4 py-4">
+    <a routerLink="/" (click)="closeMobile()"
+      class="block py-2.5 text-sm font-medium text-muted hover:text-accent transition-colors">
+      Catálogo
+    </a>
+  </div>
+  }
+</header>

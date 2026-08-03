@@ -1,0 +1,61 @@
+<!-- ─── IMAGE UPLOADER ────────────────────────────────────────── -->
+<div class="flex flex-col gap-2">
+  <p class="text-xs font-medium text-muted uppercase tracking-wide">{{ label }}</p>
+
+  @if (preview() || currentUrl()) {
+    <!-- Preview + clear -->
+    <div class="relative rounded-xl overflow-hidden border border-border aspect-video bg-surface-2">
+      <img
+        [src]="preview() || currentUrl()"
+        alt="Preview"
+        class="w-full h-full object-cover"
+      >
+      <button
+        type="button"
+        (click)="clear()"
+        id="btn-clear-{{ variant() }}"
+        aria-label="Quitar imagen"
+        class="absolute top-2 right-2 p-1.5 rounded-lg bg-black/60 text-white
+               hover:bg-black/80 transition-colors"
+      >
+        <ng-icon name="heroXMark" size="16" />
+      </button>
+    </div>
+  } @else {
+    <!-- Drop zone -->
+    <div
+      (dragover)="onDragOver($event)"
+      (dragleave)="onDragLeave()"
+      (drop)="onDrop($event)"
+      (click)="fileInput.click()"
+      class="flex flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed
+             cursor-pointer aspect-video transition-all duration-200 text-center px-4"
+      [class.border-accent]="isDragging()"
+      [class.bg-accent/5]="isDragging()"
+      [class.border-border]="!isDragging()"
+      [class.bg-surface-2]="!isDragging()"
+      [class.hover:border-muted]="!isDragging()"
+    >
+      <ng-icon [name]="isDragging() ? 'heroCloudArrowUp' : 'heroPhoto'" size="28" class="text-muted" />
+      <p class="text-sm text-muted">
+        @if (isDragging()) {
+          Soltá la imagen aquí
+        } @else {
+          <span class="text-accent font-medium">Seleccioná</span> o arrastrá una imagen
+        }
+      </p>
+      <p class="font-mono text-[10px] text-muted/60">
+        Cualquier formato — se convierte a WebP automáticamente
+      </p>
+    </div>
+  }
+
+  <input
+    #fileInput
+    [id]="inputId"
+    type="file"
+    accept="image/*"
+    class="hidden"
+    (change)="onFileChange($event)"
+  >
+</div>

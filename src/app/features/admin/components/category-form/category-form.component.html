@@ -1,0 +1,91 @@
+<!-- ─── CATEGORY FORM ─────────────────────────────────────────── -->
+<div class="max-w-lg">
+  <!-- Back + Title -->
+  <div class="flex items-center gap-3 mb-6">
+    <a
+      routerLink="/admin/categories"
+      id="btn-back-categories"
+      class="p-2 rounded-lg text-muted hover:text-foreground hover:bg-surface-2 transition-all"
+      aria-label="Volver"
+    >
+      <ng-icon name="heroArrowLeft" size="18" />
+    </a>
+    <div>
+      <h1 class="font-display text-2xl text-foreground">
+        {{ isEdit() ? 'EDITAR' : 'NUEVA' }} CATEGORÍA
+      </h1>
+    </div>
+  </div>
+
+  @if (loading()) {
+    <div class="bg-surface border border-border rounded-xl h-48 animate-pulse"></div>
+  } @else {
+    <form (ngSubmit)="submit()" id="form-category" class="bg-surface border border-border rounded-xl p-6 flex flex-col gap-4">
+
+      @if (errorMsg()) {
+        <div class="flex items-center gap-2 text-red-400 bg-red-400/10 border border-red-400/20 rounded-lg px-3.5 py-2.5 text-sm">
+          <ng-icon name="heroExclamationTriangle" size="16" class="shrink-0" />
+          {{ errorMsg() }}
+        </div>
+      }
+
+      <!-- Name -->
+      <div class="flex flex-col gap-1.5">
+        <label for="input-cat-name" class="text-xs font-medium text-muted uppercase tracking-wide">
+          Nombre <span class="text-red-400">*</span>
+        </label>
+        <input
+          id="input-cat-name"
+          type="text"
+          [ngModel]="name()"
+          (ngModelChange)="name.set($event)"
+          name="name"
+          placeholder="Ej: Logos, Banners..."
+          class="bg-surface-2 border border-border rounded-lg px-3.5 py-2.5 text-sm text-foreground
+                 placeholder:text-muted/50 focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent/30 transition-all"
+        >
+      </div>
+
+      <!-- Description -->
+      <div class="flex flex-col gap-1.5">
+        <label for="input-cat-desc" class="text-xs font-medium text-muted uppercase tracking-wide">
+          Descripción
+        </label>
+        <textarea
+          id="input-cat-desc"
+          [ngModel]="description()"
+          (ngModelChange)="description.set($event)"
+          name="description"
+          rows="3"
+          placeholder="Descripción opcional de la categoría..."
+          class="bg-surface-2 border border-border rounded-lg px-3.5 py-2.5 text-sm text-foreground
+                 placeholder:text-muted/50 focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent/30
+                 resize-none transition-all"
+        ></textarea>
+      </div>
+
+      <!-- Submit -->
+      <div class="flex items-center gap-3 pt-1">
+        <button
+          id="btn-cat-submit"
+          type="submit"
+          [disabled]="saving()"
+          class="flex items-center gap-2 bg-accent text-accent-fg font-bold px-6 py-2.5 rounded-lg text-sm
+                 hover:shadow-[0_0_15px_var(--accent)] transition-all duration-200
+                 disabled:opacity-60 disabled:cursor-not-allowed"
+        >
+          @if (saving()) {
+            <span class="inline-block w-3.5 h-3.5 border-2 border-accent-fg/30 border-t-accent-fg rounded-full animate-spin"></span>
+          }
+          {{ isEdit() ? 'Guardar cambios' : 'Crear categoría' }}
+        </button>
+        <a
+          routerLink="/admin/categories"
+          class="text-sm text-muted hover:text-foreground transition-colors"
+        >
+          Cancelar
+        </a>
+      </div>
+    </form>
+  }
+</div>

@@ -1,0 +1,237 @@
+<!-- ─── PRODUCT FORM ───────────────────────────────────────────── -->
+<div class="max-w-2xl">
+  <!-- Back + Title -->
+  <div class="flex items-center gap-3 mb-6">
+    <a
+      routerLink="/admin/products"
+      id="btn-back-products"
+      class="p-2 rounded-lg text-muted hover:text-foreground hover:bg-surface-2 transition-all"
+      aria-label="Volver"
+    >
+      <ng-icon name="heroArrowLeft" size="18" />
+    </a>
+    <div>
+      <h1 class="font-display text-2xl text-foreground">
+        {{ isEdit() ? 'EDITAR' : 'NUEVO' }} PRODUCTO
+      </h1>
+    </div>
+  </div>
+
+  @if (loading()) {
+    <div class="bg-surface border border-border rounded-xl h-96 animate-pulse"></div>
+  } @else {
+    <form (ngSubmit)="submit()" id="form-product" class="flex flex-col gap-5">
+
+      @if (errorMsg()) {
+        <div class="flex items-center gap-2 text-red-400 bg-red-400/10 border border-red-400/20 rounded-lg px-3.5 py-2.5 text-sm">
+          <ng-icon name="heroExclamationTriangle" size="16" class="shrink-0" />
+          {{ errorMsg() }}
+        </div>
+      }
+
+      <!-- Card: Basic info -->
+      <div class="bg-surface border border-border rounded-xl p-5 flex flex-col gap-4">
+        <p class="text-xs font-semibold uppercase tracking-wider text-muted">Datos básicos</p>
+
+        <!-- Name -->
+        <div class="flex flex-col gap-1.5">
+          <label for="input-prod-name" class="text-xs font-medium text-muted uppercase tracking-wide">
+            Nombre <span class="text-red-400">*</span>
+          </label>
+          <input
+            id="input-prod-name"
+            type="text"
+            [ngModel]="name()"
+            (ngModelChange)="name.set($event)"
+            name="name"
+            placeholder="Nombre del producto"
+            class="bg-surface-2 border border-border rounded-lg px-3.5 py-2.5 text-sm text-foreground
+                   placeholder:text-muted/50 focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent/30 transition-all"
+          >
+        </div>
+
+        <!-- Description -->
+        <div class="flex flex-col gap-1.5">
+          <label for="input-prod-desc" class="text-xs font-medium text-muted uppercase tracking-wide">Descripción</label>
+          <textarea
+            id="input-prod-desc"
+            [ngModel]="description()"
+            (ngModelChange)="description.set($event)"
+            name="description"
+            rows="3"
+            placeholder="Descripción del producto..."
+            class="bg-surface-2 border border-border rounded-lg px-3.5 py-2.5 text-sm text-foreground
+                   placeholder:text-muted/50 focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent/30 resize-none transition-all"
+          ></textarea>
+        </div>
+
+        <!-- Price + Stock -->
+        <div class="grid grid-cols-2 gap-4">
+          <div class="flex flex-col gap-1.5">
+            <label for="input-prod-price" class="text-xs font-medium text-muted uppercase tracking-wide">
+              Precio <span class="text-red-400">*</span>
+            </label>
+            <input
+              id="input-prod-price"
+              type="number"
+              min="0"
+              [ngModel]="price()"
+              (ngModelChange)="price.set($event)"
+              name="price"
+              placeholder="0"
+              class="bg-surface-2 border border-border rounded-lg px-3.5 py-2.5 text-sm text-foreground
+                     placeholder:text-muted/50 focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent/30 transition-all"
+            >
+          </div>
+          <div class="flex flex-col gap-1.5">
+            <label for="input-prod-stock" class="text-xs font-medium text-muted uppercase tracking-wide">Stock (opcional)</label>
+            <input
+              id="input-prod-stock"
+              type="number"
+              min="0"
+              [ngModel]="stock()"
+              (ngModelChange)="stock.set($event)"
+              name="stock"
+              placeholder="Sin límite"
+              class="bg-surface-2 border border-border rounded-lg px-3.5 py-2.5 text-sm text-foreground
+                     placeholder:text-muted/50 focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent/30 transition-all"
+            >
+          </div>
+        </div>
+
+        <!-- Category + Active -->
+        <div class="grid grid-cols-2 gap-4">
+          <div class="flex flex-col gap-1.5">
+            <label for="input-prod-cat" class="text-xs font-medium text-muted uppercase tracking-wide">
+              Categoría <span class="text-red-400">*</span>
+            </label>
+            <select
+              id="input-prod-cat"
+              [ngModel]="catId()"
+              (ngModelChange)="catId.set($event ? +$event : null)"
+              name="catId"
+              class="bg-surface-2 border border-border rounded-lg px-3.5 py-2.5 text-sm text-foreground
+                     focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent/30 transition-all"
+            >
+              <option [ngValue]="null" disabled>Seleccioná una</option>
+              @for (cat of categories(); track cat.id) {
+                <option [ngValue]="cat.id">{{ cat.name }}</option>
+              }
+            </select>
+          </div>
+          <div class="flex flex-col justify-center gap-1.5 pt-5">
+            <label class="flex items-center gap-2.5 cursor-pointer group">
+              <div
+                (click)="isActive.update(v => !v)"
+                class="w-11 h-6 rounded-full border-2 transition-all duration-200 relative cursor-pointer"
+                [class.bg-accent]="isActive()"
+                [class.border-accent]="isActive()"
+                [class.bg-surface-2]="!isActive()"
+                [class.border-border]="!isActive()"
+              >
+                <span
+                  class="absolute top-0.5 left-0.5 w-4 h-4 bg-white rounded-full shadow transition-transform duration-200"
+                  [class.translate-x-5]="isActive()"
+                ></span>
+              </div>
+              <span class="text-sm font-medium" [class.text-accent]="isActive()" [class.text-muted]="!isActive()">
+                {{ isActive() ? 'Activo' : 'Inactivo' }}
+              </span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card: Images -->
+      <div class="bg-surface border border-border rounded-xl p-5 flex flex-col gap-5">
+        <p class="text-xs font-semibold uppercase tracking-wider text-muted">Imágenes</p>
+
+        <!-- Desktop image -->
+        <div class="flex flex-col gap-3">
+          <div class="flex items-center gap-3">
+            <span class="text-xs font-medium text-muted uppercase tracking-wide">Imagen desktop</span>
+            <button
+              type="button"
+              (click)="useExternalDesktop.update(v => !v)"
+              class="text-[11px] font-mono text-accent hover:underline"
+            >
+              {{ useExternalDesktop() ? '→ Usar archivo' : '→ Usar URL externa' }}
+            </button>
+          </div>
+          @if (useExternalDesktop()) {
+            <input
+              id="input-desktop-url"
+              type="url"
+              [ngModel]="desktopExternalUrl()"
+              (ngModelChange)="desktopExternalUrl.set($event)"
+              name="desktopExternalUrl"
+              placeholder="https://..."
+              class="bg-surface-2 border border-border rounded-lg px-3.5 py-2.5 text-sm text-foreground
+                     placeholder:text-muted/50 focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent/30 transition-all"
+            >
+          } @else {
+            <app-image-uploader
+              variant="desktop"
+              [currentUrl]="existingDesktopUrl()"
+              (imageChange)="onDesktopImageChange($event)"
+            />
+          }
+        </div>
+
+        <!-- Mobile image -->
+        <div class="flex flex-col gap-3">
+          <div class="flex items-center gap-3">
+            <span class="text-xs font-medium text-muted uppercase tracking-wide">Imagen mobile</span>
+            <button
+              type="button"
+              (click)="useExternalMobile.update(v => !v)"
+              class="text-[11px] font-mono text-accent hover:underline"
+            >
+              {{ useExternalMobile() ? '→ Usar archivo' : '→ Usar URL externa' }}
+            </button>
+          </div>
+          @if (useExternalMobile()) {
+            <input
+              id="input-mobile-url"
+              type="url"
+              [ngModel]="mobileExternalUrl()"
+              (ngModelChange)="mobileExternalUrl.set($event)"
+              name="mobileExternalUrl"
+              placeholder="https://..."
+              class="bg-surface-2 border border-border rounded-lg px-3.5 py-2.5 text-sm text-foreground
+                     placeholder:text-muted/50 focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent/30 transition-all"
+            >
+          } @else {
+            <app-image-uploader
+              variant="mobile"
+              [currentUrl]="existingMobileUrl()"
+              (imageChange)="onMobileImageChange($event)"
+            />
+          }
+        </div>
+      </div>
+
+      <!-- Submit -->
+      <div class="flex items-center gap-3">
+        <button
+          id="btn-prod-submit"
+          type="submit"
+          [disabled]="saving()"
+          class="flex items-center gap-2 bg-accent text-accent-fg font-bold px-7 py-3 rounded-xl text-sm
+                 hover:shadow-[0_0_20px_var(--accent)] transition-all duration-200
+                 disabled:opacity-60 disabled:cursor-not-allowed"
+        >
+          @if (saving()) {
+            <span class="inline-block w-4 h-4 border-2 border-accent-fg/30 border-t-accent-fg rounded-full animate-spin"></span>
+            Guardando...
+          } @else {
+            {{ isEdit() ? 'Guardar cambios' : 'Crear producto' }}
+          }
+        </button>
+        <a routerLink="/admin/products" class="text-sm text-muted hover:text-foreground transition-colors">
+          Cancelar
+        </a>
+      </div>
+    </form>
+  }
+</div>

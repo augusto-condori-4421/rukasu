@@ -1,0 +1,117 @@
+<!-- noindex: esta ruta no está enlazada ni indexada en ningún menú público -->
+<meta name="robots" content="noindex, nofollow">
+
+<!-- ─── ADMIN LOGIN ───────────────────────────────────────────── -->
+<div class="min-h-dvh bg-background flex items-center justify-center px-4">
+  <!-- Background glow -->
+  <div class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
+              w-[500px] h-[500px] bg-accent/5 blur-[120px] rounded-full pointer-events-none"></div>
+
+  <div class="relative z-10 w-full max-w-sm">
+    <!-- Logo + brand -->
+    <div class="flex flex-col items-center gap-3 mb-8">
+      <img src="logo.webp" alt="Rukasu Design" class="h-14 w-auto">
+      <div class="text-center">
+        <p class="font-display text-lg tracking-widest text-foreground">RUKASU DESIGN</p>
+        <p class="text-xs text-muted mt-0.5">Panel de Administración</p>
+      </div>
+    </div>
+
+    <!-- Card -->
+    <div class="bg-surface border border-border rounded-2xl p-7 relative">
+      <!-- Corner brackets -->
+      <span class="absolute top-3 left-3 w-4 h-4 border-t-2 border-l-2 border-accent opacity-50 pointer-events-none"></span>
+      <span class="absolute top-3 right-3 w-4 h-4 border-t-2 border-r-2 border-accent opacity-50 pointer-events-none"></span>
+      <span class="absolute bottom-3 left-3 w-4 h-4 border-b-2 border-l-2 border-accent opacity-50 pointer-events-none"></span>
+      <span class="absolute bottom-3 right-3 w-4 h-4 border-b-2 border-r-2 border-accent opacity-50 pointer-events-none"></span>
+
+      <h1 class="sr-only">Ingreso al panel de administración</h1>
+      <h2 class="font-semibold text-foreground text-center mb-6">Iniciar sesión</h2>
+
+      <form (ngSubmit)="submit()" class="flex flex-col gap-4" id="form-login">
+        <!-- Email -->
+        <div class="flex flex-col gap-1.5">
+          <label for="input-email" class="text-xs font-medium text-muted uppercase tracking-wide">
+            Email
+          </label>
+          <input
+            id="input-email"
+            type="email"
+            autocomplete="email"
+            [ngModel]="email()"
+            (ngModelChange)="email.set($event)"
+            name="email"
+            placeholder="admin@ejemplo.com"
+            class="bg-surface-2 border border-border rounded-lg px-3.5 py-2.5 text-sm
+                   text-foreground placeholder:text-muted/50
+                   focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent/30
+                   transition-all duration-200"
+          >
+        </div>
+
+        <!-- Password -->
+        <div class="flex flex-col gap-1.5">
+          <label for="input-password" class="text-xs font-medium text-muted uppercase tracking-wide">
+            Contraseña
+          </label>
+          <div class="relative">
+            <input
+              id="input-password"
+              [type]="showPassword() ? 'text' : 'password'"
+              autocomplete="current-password"
+              [ngModel]="password()"
+              (ngModelChange)="password.set($event)"
+              name="password"
+              placeholder="••••••••"
+              class="w-full bg-surface-2 border border-border rounded-lg px-3.5 py-2.5 pr-10 text-sm
+                     text-foreground placeholder:text-muted/50
+                     focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent/30
+                     transition-all duration-200"
+            >
+            <button
+              type="button"
+              id="btn-toggle-password"
+              (click)="showPassword.update(v => !v)"
+              aria-label="Mostrar/ocultar contraseña"
+              class="absolute right-3 top-1/2 -translate-y-1/2 text-muted hover:text-foreground transition-colors"
+            >
+              @if (showPassword()) {
+                <ng-icon name="heroEyeSlash" size="18" />
+              } @else {
+                <ng-icon name="heroEye" size="18" />
+              }
+            </button>
+          </div>
+        </div>
+
+        <!-- Error message -->
+        @if (errorMsg()) {
+          <div class="flex items-center gap-2 text-red-400 text-sm bg-red-400/10 border border-red-400/20
+                      rounded-lg px-3.5 py-2.5">
+            <ng-icon name="heroExclamationTriangle" size="16" class="shrink-0" />
+            {{ errorMsg() }}
+          </div>
+        }
+
+        <!-- Submit -->
+        <button
+          id="btn-login-submit"
+          type="submit"
+          [disabled]="loading()"
+          class="flex items-center justify-center gap-2 w-full bg-accent text-accent-fg font-bold
+                 py-3 rounded-xl text-sm transition-all duration-200 mt-1
+                 hover:shadow-[0_0_20px_var(--accent)] hover:scale-[1.02] active:scale-[0.98]
+                 disabled:opacity-60 disabled:cursor-not-allowed disabled:scale-100"
+        >
+          @if (loading()) {
+            <span class="inline-block w-4 h-4 border-2 border-accent-fg/30 border-t-accent-fg
+                         rounded-full animate-spin"></span>
+            Ingresando...
+          } @else {
+            Ingresar
+          }
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
