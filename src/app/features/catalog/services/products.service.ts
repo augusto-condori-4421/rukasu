@@ -17,6 +17,7 @@ export class ProductsService {
     }
     this.loading.set(true);
     this.error.set(null);
+
     const { data, error } = await this.supabase.client!
       .from('products')
       .select('id_prod, cat_id, name, price, image_url_mobile, image_url_desktop')
@@ -24,10 +25,23 @@ export class ProductsService {
       .order('name');
 
     if (error) {
-      this.error.set(error.message);
+      // First attempt failed — retry once after 2 seconds
+      await new Promise(r => setTimeout(r, 2000));
+      const retry = await this.supabase.client!
+        .from('products')
+        .select('id_prod, cat_id, name, price, image_url_mobile, image_url_desktop')
+        .eq('is_active', true)
+        .order('name');
+
+      if (retry.error) {
+        this.error.set(retry.error.message);
+      } else {
+        this.products.set((retry.data as ProductListItem[]) ?? []);
+      }
     } else {
       this.products.set((data as ProductListItem[]) ?? []);
     }
+
     this.loading.set(false);
   }
 
