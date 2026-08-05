@@ -58,21 +58,25 @@ export class HomeComponent implements OnInit, AfterViewInit {
     return list;
   });
 
+  constructor() {
+    AOS.init({
+      duration: 750,
+      easing: 'ease-out-cubic',
+      once: true,
+      offset: 0,
+    });
+  }
+
   async ngOnInit() {
     await Promise.all([
       this.productsService.load(),
       this.categoriesService.load(),
     ]);
-    setTimeout(() => AOS.refresh(), 100);
+    setTimeout(() => AOS.refresh(), 50);
   }
 
   ngAfterViewInit() {
-    AOS.init({
-      duration: 700,
-      easing: 'ease-out-cubic',
-      once: true,
-      offset: 60,
-    });
+    setTimeout(() => AOS.refresh(), 0);
   }
 
   async openDetail(product: ProductListItem) {

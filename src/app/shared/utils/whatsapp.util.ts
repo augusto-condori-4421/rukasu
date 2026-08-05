@@ -19,7 +19,7 @@ export function buildWhatsAppLink(items: CartItem[]): string {
     '',
     `TOTAL APROX: ${formatARS(total)}`,
     '',
-    '¿Podemos coordinar los detalles? 🙌',
+    '¿Podemos coordinar los detalles?',
   ].join('\n');
 
   const encoded = encodeURIComponent(message);

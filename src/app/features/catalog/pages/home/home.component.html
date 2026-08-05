@@ -18,8 +18,9 @@
   <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full
               grid lg:grid-cols-2 gap-12 items-center pt-24 pb-16">
 
-    <!-- Left: Headline + CTA -->
-    <div class="flex flex-col items-center lg:items-start text-center lg:text-left gap-7" data-aos="fade-right">
+    <!-- Left: Headline + CTA — enters from the left -->
+    <div class="flex flex-col items-center lg:items-start text-center lg:text-left gap-7"
+         data-aos="fade-right" data-aos-duration="800" data-aos-delay="100">
 
       <!-- Mono label -->
       <div class="flex items-center gap-2">
@@ -56,8 +57,9 @@
       </div>
     </div>
 
-    <!-- Right: Character image -->
-    <div class="flex items-end justify-center lg:justify-end" data-aos="fade-left" data-aos-delay="150">
+    <!-- Right: Character image — enters from the right -->
+    <div class="flex items-end justify-center lg:justify-end"
+         data-aos="fade-left" data-aos-duration="900" data-aos-delay="200">
       <div class="relative">
         <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-64 h-24 bg-accent/20 blur-3xl rounded-full"></div>
         <img src="cuerpo-completo.webp" alt="Mascota Rukasu Design" class="relative z-10 h-[420px] lg:h-[500px] w-auto object-contain
@@ -66,8 +68,9 @@
     </div>
   </div>
 
-  <!-- Scroll indicator -->
-  <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 animate-bounce opacity-40">
+  <!-- Scroll indicator — fades up last -->
+  <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 animate-bounce opacity-40"
+       data-aos="fade-up" data-aos-delay="600" data-aos-duration="600">
     <div class="w-px h-8 bg-gradient-to-b from-accent to-transparent"></div>
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
       class="w-4 h-4 text-accent">
