@@ -1,69 +1,76 @@
 <!-- ─── PRODUCT DETAIL MODAL ─────────────────────────────────── -->
 <!-- Backdrop -->
-<div
-  id="modal-backdrop"
-  @backdrop
-  (click)="onBackdropClick($event)"
-  class="fixed inset-0 z-[60] bg-black/70 backdrop-blur-sm flex items-center justify-center p-4"
->
+<div id="modal-backdrop" @backdrop (click)="onBackdropClick($event)"
+  class="fixed inset-0 z-[60] bg-black/70 backdrop-blur-sm flex items-end sm:items-center justify-center sm:p-4">
   <!-- Panel -->
-  <div
-    @panel
-    role="dialog"
-    aria-modal="true"
-    [attr.aria-label]="product().name"
-    class="relative bg-surface border border-border rounded-2xl w-full max-w-3xl max-h-[90vh]
-           overflow-y-auto shadow-2xl"
-  >
-    <!-- Corner brackets (decorative) -->
-    <span class="absolute top-4 left-4 w-5 h-5 border-t-2 border-l-2 border-accent opacity-60 pointer-events-none"></span>
-    <span class="absolute top-4 right-4 w-5 h-5 border-t-2 border-r-2 border-accent opacity-60 pointer-events-none"></span>
-    <span class="absolute bottom-4 left-4 w-5 h-5 border-b-2 border-l-2 border-accent opacity-60 pointer-events-none"></span>
-    <span class="absolute bottom-4 right-4 w-5 h-5 border-b-2 border-r-2 border-accent opacity-60 pointer-events-none"></span>
+  <div @panel role="dialog" aria-modal="true" [attr.aria-label]="product().name" class="relative bg-surface border border-border
+           rounded-t-2xl sm:rounded-2xl
+           w-full sm:max-w-3xl
+           max-h-[85vh] sm:max-h-[90vh]
+           overflow-y-auto shadow-2xl">
+    <!-- Corner brackets (decorative) — only on sm+ -->
+    <span
+      class="hidden sm:block absolute top-4 left-4 w-5 h-5 border-t-2 border-l-2 border-accent opacity-60 pointer-events-none"></span>
+    <span
+      class="hidden sm:block absolute top-4 right-4 w-5 h-5 border-t-2 border-r-2 border-accent opacity-60 pointer-events-none"></span>
+    <span
+      class="hidden sm:block absolute bottom-4 left-4 w-5 h-5 border-b-2 border-l-2 border-accent opacity-60 pointer-events-none"></span>
+    <span
+      class="hidden sm:block absolute bottom-4 right-4 w-5 h-5 border-b-2 border-r-2 border-accent opacity-60 pointer-events-none"></span>
 
-    <!-- Close -->
-    <button
-      id="btn-modal-close"
-      (click)="close.emit()"
-      aria-label="Cerrar"
-      class="absolute top-3 right-3 z-10 p-2 rounded-lg text-muted hover:text-foreground
-             hover:bg-surface-2 transition-all duration-200"
-    >
-      <ng-icon name="heroXMark" size="20" />
+    <!-- Mobile close bar (drag handle + close button) — only on mobile -->
+    <div class="sm:hidden flex items-center justify-between px-4 pt-3 pb-1">
+      <!-- Drag handle visual -->
+      <div class="w-8 h-[3px] rounded-full bg-border mx-auto absolute left-1/2 -translate-x-1/2 top-3"></div>
+      <!-- Close button -->
+      <button (click)="close.emit()" aria-label="Cerrar"
+        class="group ml-auto p-1 cursor-pointer text-[var(--foreground)]">
+        <ng-icon name="heroXMark" size="26" class="transition-all duration-200
+                 [filter:drop-shadow(0_0_4px_var(--accent))]
+                 group-hover:[filter:drop-shadow(0_0_8px_var(--accent))_drop-shadow(0_0_16px_var(--accent))]
+                 group-hover:scale-125 active:scale-95 block" />
+      </button>
+    </div>
+
+    <!-- Desktop close (X corner button) — hidden on mobile since we have the bar above -->
+    <button id="btn-modal-close" (click)="close.emit()" aria-label="Cerrar"
+      class="group hidden sm:block absolute top-1 right-[51%] z-10 p-1 cursor-pointer text-[var(--accent-fg)]">
+      <ng-icon name="heroXMark" size="26" class="text-[var(--accent-fg)] transition-all duration-200
+               [filter:drop-shadow(0_0_4px_var(--accent))]
+               group-hover:[filter:drop-shadow(0_0_12px_var(--accent))_drop-shadow(0_0_16px_var(--accent))]
+               group-hover:scale-125 active:scale-95 block" />
     </button>
 
-    <div class="grid md:grid-cols-2 gap-0">
-      <!-- Image -->
-      <div class="bg-surface-2 rounded-tl-2xl rounded-bl-2xl overflow-hidden aspect-square md:aspect-auto">
+    <div class="grid sm:grid-cols-2 gap-0">
+      <!-- Image — smaller on mobile -->
+      <div class="bg-surface-2 sm:rounded-tl-2xl sm:rounded-bl-2xl overflow-hidden aspect-[16/9] sm:aspect-auto">
         <picture>
           @if (product().image_url_desktop) {
-            <source media="(min-width: 768px)" [attr.srcset]="product().image_url_desktop">
+          <source media="(min-width: 640px)" [attr.srcset]="product().image_url_desktop">
           }
-          <img
-            [src]="product().image_url_mobile || product().image_url_desktop || 'logo.webp'"
-            [alt]="product().name"
-            class="w-full h-full object-cover"
-          >
+          <img [src]="product().image_url_mobile || product().image_url_desktop || 'logo.webp'" [alt]="product().name"
+            class="w-full h-full object-cover">
         </picture>
       </div>
 
       <!-- Info -->
-      <div class="p-6 md:p-8 flex flex-col gap-5">
+      <div class="p-4 sm:p-6 md:p-8 flex flex-col gap-4">
         <!-- Title -->
-        <h2 class="font-display text-2xl md:text-3xl text-foreground leading-tight">
+        <h2 class="font-display text-xl sm:text-2xl md:text-3xl text-foreground leading-tight">
           {{ product().name }}
         </h2>
 
         <!-- Price -->
-        <p class="text-accent text-3xl font-display [text-shadow:0_0_20px_color-mix(in_srgb,var(--accent)_70%,transparent)]">
+        <p
+          class="text-accent text-2xl sm:text-3xl font-display [text-shadow:0_0_20px_color-mix(in_srgb,var(--accent)_70%,transparent)]">
           {{ product().price | price }}
         </p>
 
         <!-- Description -->
         @if (product().description) {
-          <p class="text-muted text-sm leading-relaxed">
-            {{ product().description }}
-          </p>
+        <p class="text-muted text-sm leading-relaxed">
+          {{ product().description }}
+        </p>
         }
 
         <!-- Divider -->
@@ -72,52 +79,39 @@
         <!-- Quantity selector -->
         <div class="flex items-center gap-3">
           <span class="text-sm text-muted font-medium">Cantidad</span>
-          <div class="flex items-center border border-border rounded-lg overflow-hidden" [class.opacity-50]="isOutOfStock()">
-            <button
-              (click)="decQty()"
-              [disabled]="isOutOfStock()"
-              id="btn-qty-dec"
-              aria-label="Decrementar cantidad"
-              class="p-2 text-muted hover:text-foreground hover:bg-surface-2 transition-colors disabled:cursor-not-allowed"
-            >
+          <div class="flex items-center border border-border rounded-lg overflow-hidden"
+            [class.opacity-50]="isOutOfStock()">
+            <button (click)="decQty()" [disabled]="isOutOfStock()" id="btn-qty-dec" aria-label="Decrementar cantidad"
+              class="p-2 text-muted hover:text-foreground hover:bg-surface-2 transition-colors disabled:cursor-not-allowed">
               <ng-icon name="heroMinus" size="16" />
             </button>
-            <span class="w-10 text-center font-mono text-sm text-foreground">{{ isOutOfStock() ? 0 : quantity() }}</span>
-            <button
-              (click)="incQty()"
-              [disabled]="isOutOfStock()"
-              id="btn-qty-inc"
-              aria-label="Incrementar cantidad"
-              class="p-2 text-muted hover:text-foreground hover:bg-surface-2 transition-colors disabled:cursor-not-allowed"
-            >
+            <span class="w-10 text-center font-mono text-sm text-foreground">{{ isOutOfStock() ? 0 : quantity()
+              }}</span>
+            <button (click)="incQty()" [disabled]="isOutOfStock()" id="btn-qty-inc" aria-label="Incrementar cantidad"
+              class="p-2 text-muted hover:text-foreground hover:bg-surface-2 transition-colors disabled:cursor-not-allowed">
               <ng-icon name="heroPlus" size="16" />
             </button>
           </div>
         </div>
 
         <!-- Add to cart CTA -->
-        <button
-          (click)="addToCart()"
-          [disabled]="isOutOfStock()"
-          id="btn-modal-add-cart"
-          class="flex items-center justify-center gap-2 w-full bg-accent text-accent-fg
-                 font-bold py-3.5 rounded-xl text-sm transition-all duration-200
+        <button (click)="addToCart()" [disabled]="isOutOfStock()" id="btn-modal-add-cart" class="flex items-center justify-center gap-2 w-full bg-accent text-accent-fg
+                 font-bold py-3 sm:py-3.5 rounded-xl text-sm transition-all duration-200
                  hover:shadow-[0_0_25px_var(--accent)] hover:scale-[1.02] active:scale-[0.98]
-                 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:hover:shadow-none"
-        >
+                 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:hover:shadow-none">
           <ng-icon name="heroShoppingCart" size="18" />
           {{ isOutOfStock() ? 'Sin stock disponible' : 'Agregar al carrito' }}
         </button>
 
         <!-- Stock badge -->
         @if (product().stock !== null && product().stock !== undefined) {
-          <p class="text-xs text-muted text-center font-mono">
-            @if ((product().stock ?? 0) > 0) {
-              Stock disponible: {{ product().stock }}
-            } @else {
-              Sin stock — consultá por encargo
-            }
-          </p>
+        <p class="text-xs text-muted text-center font-mono">
+          @if ((product().stock ?? 0) > 0) {
+          Stock disponible: {{ product().stock }}
+          } @else {
+          Sin stock — consultá por encargo
+          }
+        </p>
         }
       </div>
     </div>

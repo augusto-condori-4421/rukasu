@@ -5,7 +5,6 @@ import {
   inject,
   signal,
   computed,
-  OnInit,
 } from '@angular/core';
 import {
   trigger,
