@@ -4,11 +4,12 @@ import { heroPlus, heroEye } from '@ng-icons/heroicons/outline';
 import type { ProductListItem } from '../../../../core/models/product.model';
 import { PricePipe } from '../../../../shared/pipes/price.pipe';
 import { CartService } from '../../../cart/services/cart.service';
+import { DriveImageDirective } from '../../../../shared/ui/drive-image/drive-image.directive';
 
 @Component({
   selector: 'app-product-card',
   standalone: true,
-  imports: [NgIconComponent, PricePipe],
+  imports: [NgIconComponent, PricePipe, DriveImageDirective],
   providers: [provideIcons({ heroPlus, heroEye })],
   templateUrl: './product-card.component.html',
 })

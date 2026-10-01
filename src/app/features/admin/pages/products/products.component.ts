@@ -5,11 +5,12 @@ import { heroPencil, heroTrash, heroPlus, heroExclamationTriangle, heroEye, hero
 import { ProductsAdminService } from '../../services/products-admin.service';
 import { PricePipe } from '../../../../shared/pipes/price.pipe';
 import type { Product } from '../../../../core/models/product.model';
+import { DriveImageDirective } from '../../../../shared/ui/drive-image/drive-image.directive';
 
 @Component({
   selector: 'app-admin-products',
   standalone: true,
-  imports: [RouterLink, NgIconComponent, PricePipe],
+  imports: [RouterLink, NgIconComponent, PricePipe, DriveImageDirective],
   providers: [provideIcons({ heroPencil, heroTrash, heroPlus, heroExclamationTriangle, heroEye, heroEyeSlash })],
   templateUrl: './products.component.html',
 })

@@ -7,6 +7,7 @@ import { ProductsAdminService } from '../../services/products-admin.service';
 import { CategoriesAdminService } from '../../services/categories-admin.service';
 import { ImageUploaderComponent, type ImageResult } from '../image-uploader/image-uploader.component';
 import type { Category } from '../../../../core/models/category.model';
+import { getDriveImageCandidates } from '../../../../shared/utils/drive-image.util';
 
 @Component({
   selector: 'app-product-form',
@@ -95,10 +96,13 @@ export class ProductFormComponent implements OnInit {
       let mobileUrl = this.existingMobileUrl();
 
       if (this.useExternalDesktop() && this.desktopExternalUrl()) {
-        desktopUrl = this.desktopExternalUrl();
+        // Convierte el link de Drive al formato directo antes de guardar
+        const candidates = getDriveImageCandidates(this.desktopExternalUrl());
+        desktopUrl = candidates[0] ?? this.desktopExternalUrl();
       }
       if (this.useExternalMobile() && this.mobileExternalUrl()) {
-        mobileUrl = this.mobileExternalUrl();
+        const candidates = getDriveImageCandidates(this.mobileExternalUrl());
+        mobileUrl = candidates[0] ?? this.mobileExternalUrl();
       }
 
       if (this.isEdit() && this.editId()) {

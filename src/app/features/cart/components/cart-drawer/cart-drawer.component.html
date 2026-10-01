@@ -52,7 +52,7 @@
                     transition-all duration-200 hover:border-border">
           <!-- Thumbnail -->
           <img
-            [src]="item.product.image_url_mobile || item.product.image_url_desktop || 'logo.webp'"
+            [appDriveImage]="item.product.image_url_mobile || item.product.image_url_desktop"
             [alt]="item.product.name"
             class="w-14 h-14 rounded-lg object-cover bg-surface shrink-0"
           >

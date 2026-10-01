@@ -22,11 +22,12 @@ import {
 import type { Product } from '../../../../core/models/product.model';
 import { PricePipe } from '../../../../shared/pipes/price.pipe';
 import { CartService } from '../../../cart/services/cart.service';
+import { DriveImageDirective } from '../../../../shared/ui/drive-image/drive-image.directive';
 
 @Component({
   selector: 'app-product-detail-modal',
   standalone: true,
-  imports: [NgIconComponent, PricePipe],
+  imports: [NgIconComponent, PricePipe, DriveImageDirective],
   providers: [provideIcons({ heroXMark, heroPlus, heroMinus, heroShoppingCart })],
   templateUrl: './product-detail-modal.component.html',
   animations: [

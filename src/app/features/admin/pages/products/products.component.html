@@ -61,7 +61,7 @@
                 <!-- Thumbnail -->
                 <td class="px-4 py-3">
                   <img
-                    [src]="product.image_url_mobile || product.image_url_desktop || 'logo.webp'"
+                    [appDriveImage]="product.image_url_mobile || product.image_url_desktop"
                     [alt]="product.name"
                     class="w-10 h-10 rounded-lg object-cover bg-surface-2"
                   >

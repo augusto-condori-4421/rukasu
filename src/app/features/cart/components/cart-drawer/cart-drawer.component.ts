@@ -16,11 +16,12 @@ import {
 import { CartService } from '../../services/cart.service';
 import { PricePipe } from '../../../../shared/pipes/price.pipe';
 import { buildWhatsAppLink } from '../../../../shared/utils/whatsapp.util';
+import { DriveImageDirective } from '../../../../shared/ui/drive-image/drive-image.directive';
 
 @Component({
   selector: 'app-cart-drawer',
   standalone: true,
-  imports: [NgIconComponent, PricePipe],
+  imports: [NgIconComponent, PricePipe, DriveImageDirective],
   providers: [provideIcons({ heroXMark, heroPlus, heroMinus, heroTrash, heroShoppingBag })],
   templateUrl: './cart-drawer.component.html',
   animations: [

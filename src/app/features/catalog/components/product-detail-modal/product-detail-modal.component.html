@@ -48,7 +48,7 @@
           @if (product().image_url_desktop) {
           <source media="(min-width: 640px)" [attr.srcset]="product().image_url_desktop">
           }
-          <img [src]="product().image_url_mobile || product().image_url_desktop || 'logo.webp'" [alt]="product().name"
+          <img [appDriveImage]="product().image_url_mobile || product().image_url_desktop" [alt]="product().name"
             class="w-full h-full object-cover">
         </picture>
       </div>
