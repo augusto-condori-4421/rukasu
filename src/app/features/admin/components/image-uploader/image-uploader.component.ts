@@ -7,7 +7,7 @@ import {
   ElementRef,
 } from '@angular/core';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
-import { heroCloudArrowUp, heroPhoto, heroXMark } from '@ng-icons/heroicons/outline';
+import { heroPhoto, heroXMark } from '@ng-icons/heroicons/outline';
 
 export type ImageVariant = 'desktop' | 'mobile';
 
@@ -20,7 +20,7 @@ export interface ImageResult {
   selector: 'app-image-uploader',
   standalone: true,
   imports: [NgIconComponent],
-  providers: [provideIcons({ heroCloudArrowUp, heroPhoto, heroXMark })],
+  providers: [provideIcons({ heroPhoto, heroXMark })],
   templateUrl: './image-uploader.component.html',
 })
 export class ImageUploaderComponent {
@@ -31,7 +31,7 @@ export class ImageUploaderComponent {
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
 
   preview = signal<string | null>(null);
-  isDragging = signal(false);
+  // isDragging = signal(false);
 
   get label() {
     return this.variant() === 'desktop' ? 'Imagen desktop (≥768px)' : 'Imagen mobile (<768px)';
@@ -41,21 +41,21 @@ export class ImageUploaderComponent {
     return `file-input-${this.variant()}`;
   }
 
-  onDragOver(event: DragEvent) {
-    event.preventDefault();
-    this.isDragging.set(true);
-  }
+  // onDragOver(event: DragEvent) {
+  //   event.preventDefault();
+  //   this.isDragging.set(true);
+  // }
 
-  onDragLeave() {
-    this.isDragging.set(false);
-  }
+  // onDragLeave() {
+  //   this.isDragging.set(false);
+  // }
 
-  onDrop(event: DragEvent) {
-    event.preventDefault();
-    this.isDragging.set(false);
-    const file = event.dataTransfer?.files[0];
-    if (file) this.processFile(file);
-  }
+  // onDrop(event: DragEvent) {
+  //   event.preventDefault();
+  //   this.isDragging.set(false);
+  //   const file = event.dataTransfer?.files[0];
+  //   if (file) this.processFile(file);
+  // }
 
   onFileChange(event: Event) {
     const file = (event.target as HTMLInputElement).files?.[0];

@@ -47,8 +47,8 @@ export class ProductFormComponent implements OnInit {
   /** URL externas (alternativa a subida de archivo) */
   desktopExternalUrl = signal('');
   mobileExternalUrl = signal('');
-  useExternalDesktop = signal(false);
-  useExternalMobile = signal(false);
+  useExternalDesktop = signal(true);
+  useExternalMobile = signal(true);
 
   async ngOnInit() {
     // Load categories first
@@ -69,6 +69,8 @@ export class ProductFormComponent implements OnInit {
         this.isActive.set(prod.is_active);
         this.existingDesktopUrl.set(prod.image_url_desktop);
         this.existingMobileUrl.set(prod.image_url_mobile);
+        // Pre-fill the single URL field with the existing image URL
+        this.desktopExternalUrl.set(prod.image_url_desktop || prod.image_url_mobile);
       }
       this.loading.set(false);
     }
@@ -91,19 +93,12 @@ export class ProductFormComponent implements OnInit {
     this.errorMsg.set(null);
 
     try {
-      // Resolve image URLs
-      let desktopUrl = this.existingDesktopUrl();
-      let mobileUrl = this.existingMobileUrl();
-
-      if (this.useExternalDesktop() && this.desktopExternalUrl()) {
-        // Convierte el link de Drive al formato directo antes de guardar
-        const candidates = getDriveImageCandidates(this.desktopExternalUrl());
-        desktopUrl = candidates[0] ?? this.desktopExternalUrl();
-      }
-      if (this.useExternalMobile() && this.mobileExternalUrl()) {
-        const candidates = getDriveImageCandidates(this.mobileExternalUrl());
-        mobileUrl = candidates[0] ?? this.mobileExternalUrl();
-      }
+      // Resolve image URLs — single URL used for both desktop and mobile
+      const rawUrl = this.desktopExternalUrl() || this.existingDesktopUrl();
+      const candidates = getDriveImageCandidates(rawUrl);
+      const resolvedUrl = candidates[0] ?? rawUrl;
+      let desktopUrl = resolvedUrl;
+      let mobileUrl = resolvedUrl;
 
       if (this.isEdit() && this.editId()) {
         // Update record first to get valid ID
