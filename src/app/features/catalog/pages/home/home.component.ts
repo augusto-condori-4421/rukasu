@@ -16,6 +16,7 @@ import { CartDrawerComponent } from '../../../cart/components/cart-drawer/cart-d
 import { HeaderComponent } from '../../../../shared/ui/header/header.component';
 import { FooterComponent } from '../../../../shared/ui/footer/footer.component';
 import type { ProductListItem, Product } from '../../../../core/models/product.model';
+import { getSubtreeIds } from '../../../../shared/utils/category-tree.util';
 import AOS from 'aos';
 
 @Component({
@@ -48,13 +49,18 @@ export class HomeComponent implements OnInit, AfterViewInit {
   filteredProducts = computed(() => {
     let list = this.products();
     const cat = this.selectedCategory();
-    if (cat !== null) {
-      list = list.filter(p => p.cat_id === cat);
-    }
     const q = this.searchQuery().trim().toLowerCase();
+
+    if (cat !== null) {
+      // Include products from the selected category AND all its descendants
+      const subtreeIds = new Set(getSubtreeIds(cat, this.categories()));
+      list = list.filter(p => subtreeIds.has(p.cat_id));
+    }
+
     if (q) {
       list = list.filter(p => p.name.toLowerCase().includes(q));
     }
+
     return list;
   });
 

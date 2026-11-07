@@ -59,6 +59,21 @@ export class CategoriesAdminService {
       return { ok: false, reason: 'Supabase no está configurado.' };
     }
 
+    // Check for child categories first
+    const { count: childCount, error: childError } = await this.client
+      .from('categories')
+      .select('id', { count: 'exact', head: true })
+      .eq('parent_id', id);
+
+    if (childError) return { ok: false, reason: childError.message };
+    if (childCount && childCount > 0) {
+      return {
+        ok: false,
+        reason: `Esta categoría tiene ${childCount} subcategoría${childCount > 1 ? 's' : ''}. Moveélas o eliminalas primero.`,
+      };
+    }
+
+    // Check for associated products
     const { count, error: countError } = await this.client
       .from('products')
       .select('id_prod', { count: 'exact', head: true })
@@ -68,7 +83,7 @@ export class CategoriesAdminService {
     if (count && count > 0) {
       return {
         ok: false,
-        reason: `Esta categoría tiene ${count} producto${count > 1 ? 's' : ''} asociado${count > 1 ? 's' : ''}. Moveélos o eliminalos primero.`,
+        reason: `Esta categoría tiene ${count} producto${count > 1 ? 's' : ''} asociado${count > 1 ? 's' : ''}. Reasignalos o eliminalos primero.`,
       };
     }
 

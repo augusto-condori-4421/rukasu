@@ -6,13 +6,14 @@ import { heroArrowLeft, heroExclamationTriangle } from '@ng-icons/heroicons/outl
 import { ProductsAdminService } from '../../services/products-admin.service';
 import { CategoriesAdminService } from '../../services/categories-admin.service';
 import { ImageUploaderComponent, type ImageResult } from '../image-uploader/image-uploader.component';
+import { CategorySelectorComponent } from '../../../../shared/components/category-selector/category-selector.component';
 import type { Category } from '../../../../core/models/category.model';
 import { getDriveImageCandidates } from '../../../../shared/utils/drive-image.util';
 
 @Component({
   selector: 'app-product-form',
   standalone: true,
-  imports: [FormsModule, RouterLink, NgIconComponent, ImageUploaderComponent],
+  imports: [FormsModule, RouterLink, NgIconComponent, ImageUploaderComponent, CategorySelectorComponent],
   providers: [provideIcons({ heroArrowLeft, heroExclamationTriangle })],
   templateUrl: './product-form.component.html',
 })

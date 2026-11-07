@@ -1,9 +1,10 @@
-import { Component, inject, signal, OnInit } from '@angular/core';
+import { Component, inject, signal, computed, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroPencil, heroTrash, heroPlus, heroExclamationTriangle } from '@ng-icons/heroicons/outline';
 import { CategoriesAdminService } from '../../services/categories-admin.service';
-import type { Category } from '../../../../core/models/category.model';
+import type { Category, CategoryNode } from '../../../../core/models/category.model';
+import { buildCategoryTree, flattenTree } from '../../../../shared/utils/category-tree.util';
 
 @Component({
   selector: 'app-admin-categories',
@@ -20,6 +21,11 @@ export class AdminCategoriesComponent implements OnInit {
   errorMsg = signal<string | null>(null);
   successMsg = signal<string | null>(null);
   deleting = signal<number | null>(null);
+
+  /** Flat tree in depth-first order for rendering with indentation */
+  flatTree = computed<CategoryNode[]>(() =>
+    flattenTree(buildCategoryTree(this.categories()))
+  );
 
   async ngOnInit() {
     await this.loadCategories();
@@ -44,5 +50,11 @@ export class AdminCategoriesComponent implements OnInit {
       setTimeout(() => this.successMsg.set(null), 3000);
     }
     this.deleting.set(null);
+  }
+
+  /** Visual prefix for the tree row */
+  getPrefix(node: CategoryNode): string {
+    if (node.depth === 0) return '';
+    return '— '.repeat(node.depth);
   }
 }

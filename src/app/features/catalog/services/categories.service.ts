@@ -19,7 +19,7 @@ export class CategoriesService {
     this.error.set(null);
     const { data, error } = await this.supabase.client!
       .from('categories')
-      .select('id, name, description')
+      .select('id, name, description, parent_id')
       .order('name');
 
     if (error) {

@@ -1,37 +1,93 @@
-<!-- ─── CATEGORY FILTER PILLS ───────────────────────────────── -->
-<div
-  class="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-hide"
-  role="group"
-  aria-label="Filtrar por categoría"
->
-  <!-- "Todos" pill -->
-  <button
-    id="filter-all"
-    (click)="select(null)"
-    [class.bg-accent]="selected() === null"
-    [class.text-accent-fg]="selected() === null"
-    [class.border-accent]="selected() === null"
-    [class.font-bold]="selected() === null"
-    class="shrink-0 px-4 py-1.5 rounded-full border text-sm font-medium transition-all duration-200
-           border-border text-muted bg-surface-2
-           hover:border-accent hover:text-accent"
-  >
-    Todos
-  </button>
+<!-- ─── CATEGORY FILTER PILLS (hierarchical) ─────────────────── -->
+<div class="flex flex-col gap-2" role="group" aria-label="Filtrar por categoría">
 
-  @for (cat of categories(); track cat.id) {
+  <!-- Row 1: "Todos" + root categories -->
+  <div class="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-hide">
+    <!-- "Todos" pill -->
     <button
-      [id]="'filter-cat-' + cat.id"
-      (click)="select(cat.id)"
-      [class.bg-accent]="selected() === cat.id"
-      [class.text-accent-fg]="selected() === cat.id"
-      [class.border-accent]="selected() === cat.id"
-      [class.font-bold]="selected() === cat.id"
+      id="filter-all"
+      (click)="select(null)"
+      [class.bg-accent]="selected() === null"
+      [class.text-accent-fg]="selected() === null"
+      [class.border-accent]="selected() === null"
+      [class.font-bold]="selected() === null"
       class="shrink-0 px-4 py-1.5 rounded-full border text-sm font-medium transition-all duration-200
              border-border text-muted bg-surface-2
              hover:border-accent hover:text-accent"
     >
-      {{ cat.name }}
+      Todos
     </button>
+
+    @for (cat of rootCategories(); track cat.id) {
+      <button
+        [id]="'filter-cat-' + cat.id"
+        (click)="select(cat.id)"
+        [class.bg-accent]="selected() === cat.id"
+        [class.text-accent-fg]="selected() === cat.id"
+        [class.border-accent]="isInPath(cat.id)"
+        [class.font-bold]="selected() === cat.id"
+        [class.text-accent]="isInPath(cat.id) && selected() !== cat.id"
+        class="shrink-0 px-4 py-1.5 rounded-full border text-sm font-medium transition-all duration-200
+               border-border text-muted bg-surface-2
+               hover:border-accent hover:text-accent"
+      >
+        {{ cat.name }}
+      </button>
+    }
+  </div>
+
+  <!-- Row 2: direct children of the active root (shown when a root or its descendant is selected) -->
+  @if (visibleChildren().length > 0) {
+    <div class="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-hide pl-4">
+      <!-- Deselect to root pill -->
+      <button
+        (click)="select(activeRootId())"
+        class="shrink-0 px-3 py-1 rounded-full border text-xs font-medium transition-all duration-200
+               border-border/60 text-muted/70 bg-surface-2 hover:border-accent hover:text-accent"
+        [class.border-accent]="selected() === activeRootId()"
+        [class.text-accent]="selected() === activeRootId()"
+      >
+        ← Todos
+      </button>
+
+      @for (child of visibleChildren(); track child.id) {
+        <button
+          [id]="'filter-cat-' + child.id"
+          (click)="select(child.id)"
+          [class.bg-accent]="selected() === child.id"
+          [class.text-accent-fg]="selected() === child.id"
+          [class.border-accent]="isInPath(child.id)"
+          [class.font-bold]="selected() === child.id"
+          [class.text-accent]="isInPath(child.id) && selected() !== child.id"
+          class="shrink-0 px-3 py-1 rounded-full border text-xs font-medium transition-all duration-200
+                 border-border text-muted bg-surface-2
+                 hover:border-accent hover:text-accent"
+        >
+          {{ child.name }}
+        </button>
+      }
+    </div>
   }
+
+  <!-- Row 3: grandchildren (if a subcategory is selected and has children) -->
+  @if (visibleGrandchildren().length > 0) {
+    <div class="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-hide pl-8">
+      @for (gc of visibleGrandchildren(); track gc.id) {
+        <button
+          [id]="'filter-cat-' + gc.id"
+          (click)="select(gc.id)"
+          [class.bg-accent]="selected() === gc.id"
+          [class.text-accent-fg]="selected() === gc.id"
+          [class.border-accent]="selected() === gc.id"
+          [class.font-bold]="selected() === gc.id"
+          class="shrink-0 px-3 py-1 rounded-full border text-xs font-medium transition-all duration-200
+                 border-border text-muted bg-surface-2
+                 hover:border-accent hover:text-accent"
+        >
+          {{ gc.name }}
+        </button>
+      }
+    </div>
+  }
+
 </div>

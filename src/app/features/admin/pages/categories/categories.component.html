@@ -4,14 +4,11 @@
   <div class="flex items-center justify-between mb-6">
     <div>
       <h1 class="font-display text-2xl text-foreground">CATEGORÍAS</h1>
-      <p class="font-mono text-xs text-muted mt-0.5">[{{ categories().length }} categoría{{ categories().length !== 1 ? 's' : '' }}]</p>
+      <p class="font-mono text-xs text-muted mt-0.5">[{{ categories().length }} categoría{{ categories().length !== 1 ?
+        's' : '' }}]</p>
     </div>
-    <a
-      routerLink="/admin/categories/new"
-      id="btn-new-category"
-      class="flex items-center gap-2 bg-accent text-accent-fg font-bold px-4 py-2 rounded-lg
-             text-sm hover:shadow-[0_0_15px_var(--accent)] transition-all duration-200"
-    >
+    <a routerLink="/admin/categories/new" id="btn-new-category" class="flex items-center gap-2 bg-accent text-accent-fg font-bold px-4 py-2 rounded-lg
+             text-sm hover:shadow-[0_0_15px_var(--accent)] transition-all duration-200">
       <ng-icon name="heroPlus" size="16" />
       Nueva categoría
     </a>
@@ -19,71 +16,81 @@
 
   <!-- Alerts -->
   @if (errorMsg()) {
-    <div class="flex items-center gap-2 text-red-400 bg-red-400/10 border border-red-400/20
+  <div class="flex items-center gap-2 text-red-400 bg-red-400/10 border border-red-400/20
                 rounded-lg px-4 py-3 mb-4 text-sm">
-      <ng-icon name="heroExclamationTriangle" size="16" class="shrink-0" />
-      {{ errorMsg() }}
-    </div>
+    <ng-icon name="heroExclamationTriangle" size="16" class="shrink-0" />
+    {{ errorMsg() }}
+  </div>
   }
   @if (successMsg()) {
-    <div class="text-green-400 bg-green-400/10 border border-green-400/20
+  <div class="text-green-400 bg-green-400/10 border border-green-400/20
                 rounded-lg px-4 py-3 mb-4 text-sm">
-      {{ successMsg() }}
-    </div>
+    {{ successMsg() }}
+  </div>
   }
 
-  <!-- Table -->
+  <!-- Tree list -->
   @if (loading()) {
-    <div class="space-y-2">
-      @for (_ of [1,2,3]; track $index) {
-        <div class="bg-surface border border-border rounded-xl h-16 animate-pulse"></div>
-      }
-    </div>
-  } @else if (categories().length === 0) {
-    <div class="text-center py-16 text-muted text-sm">Sin categorías aún.</div>
+  <div class="space-y-2">
+    @for (_ of [1,2,3]; track $index) {
+    <div class="bg-surface border border-border rounded-xl h-16 animate-pulse"></div>
+    }
+  </div>
+  } @else if (flatTree().length === 0) {
+  <div class="text-center py-16 text-muted text-sm">Sin categorías aún.</div>
   } @else {
-    <div class="bg-surface border border-border rounded-xl overflow-hidden">
-      <table class="w-full text-sm">
-        <thead class="border-b border-border">
-          <tr>
-            <th class="px-4 py-3 text-left font-mono text-xs text-muted uppercase tracking-wider">ID</th>
-            <th class="px-4 py-3 text-left font-mono text-xs text-muted uppercase tracking-wider">Nombre</th>
-            <th class="px-4 py-3 text-left font-mono text-xs text-muted uppercase tracking-wider hidden sm:table-cell">Descripción</th>
-            <th class="px-4 py-3 text-right"></th>
-          </tr>
-        </thead>
-        <tbody>
-          @for (cat of categories(); track cat.id) {
-            <tr class="border-b border-border last:border-0 hover:bg-surface-2 transition-colors">
-              <td class="px-4 py-3 font-mono text-xs text-muted">{{ cat.id }}</td>
-              <td class="px-4 py-3 font-medium text-foreground">{{ cat.name }}</td>
-              <td class="px-4 py-3 text-muted truncate max-w-xs hidden sm:table-cell">{{ cat.description }}</td>
-              <td class="px-4 py-3 text-right">
-                <div class="flex items-center justify-end gap-1">
-                  <a
-                    [routerLink]="['/admin/categories', cat.id, 'edit']"
-                    [id]="'btn-edit-cat-' + cat.id"
-                    aria-label="Editar categoría"
-                    class="p-2 rounded-lg text-muted hover:text-accent hover:bg-accent/10 transition-all"
-                  >
-                    <ng-icon name="heroPencil" size="15" />
-                  </a>
-                  <button
-                    (click)="deleteCategory(cat.id)"
-                    [id]="'btn-delete-cat-' + cat.id"
-                    [disabled]="deleting() === cat.id"
-                    aria-label="Eliminar categoría"
-                    class="p-2 rounded-lg text-muted hover:text-red-400 hover:bg-red-400/10
-                           transition-all disabled:opacity-40"
-                  >
-                    <ng-icon name="heroTrash" size="15" />
-                  </button>
-                </div>
-              </td>
-            </tr>
-          }
-        </tbody>
-      </table>
-    </div>
+  <div class="bg-surface border border-border rounded-xl overflow-hidden">
+    <table class="w-full text-sm">
+      <thead class="border-b border-border">
+        <tr>
+          <th class="px-4 py-3 text-left font-mono text-xs text-muted uppercase tracking-wider w-10">ID</th>
+          <th class="px-4 py-3 text-left font-mono text-xs text-muted uppercase tracking-wider">Nombre</th>
+          <th class="px-4 py-3 text-left font-mono text-xs text-muted uppercase tracking-wider hidden sm:table-cell">
+            Descripción</th>
+          <th class="px-4 py-3 text-right w-24"></th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (node of flatTree(); track node.id) {
+        <tr class="border-b border-border last:border-0 hover:bg-surface-2 transition-colors"
+          [class.bg-surface-2\/30]="node.depth > 0">
+          <td class="px-4 py-3 font-mono text-xs text-muted">{{ node.id }}</td>
+          <td class="px-4 py-3 font-medium text-foreground">
+            <div class="flex items-center gap-1.5">
+              <!-- Indentation + hierarchy indicator -->
+              @if (node.depth === 0) {
+              <span class="w-2 h-2 rounded-full bg-accent/70 shrink-0"></span>
+              } @else {
+              <span class="text-muted/40 font-mono text-xs shrink-0 select-none"
+                [style.padding-left.px]="(node.depth - 1) * 12">└─</span>
+              }
+              <span>{{ node.name }}</span>
+              @if (node.children.length > 0) {
+              <span class="ml-1 font-mono text-[10px] text-muted/50 bg-surface-2 px-1.5 py-0.5 rounded">
+                {{ node.children.length }} sub
+              </span>
+              }
+            </div>
+          </td>
+          <td class="px-4 py-3 text-muted truncate max-w-xs hidden sm:table-cell">{{ node.description }}</td>
+          <td class="px-4 py-3 text-right">
+            <div class="flex items-center justify-end gap-1">
+              <a [routerLink]="['/admin/categories', node.id, 'edit']" [id]="'btn-edit-cat-' + node.id"
+                aria-label="Editar categoría"
+                class="p-2 rounded-lg text-muted hover:text-accent hover:bg-accent/10 transition-all">
+                <ng-icon name="heroPencil" size="15" />
+              </a>
+              <button (click)="deleteCategory(node.id)" [id]="'btn-delete-cat-' + node.id"
+                [disabled]="deleting() === node.id" aria-label="Eliminar categoría" class="p-2 rounded-lg text-muted hover:text-red-400 hover:bg-red-400/10
+                           transition-all disabled:opacity-40">
+                <ng-icon name="heroTrash" size="15" />
+              </button>
+            </div>
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
   }
 </div>
