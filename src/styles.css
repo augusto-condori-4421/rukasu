@@ -116,3 +116,15 @@ app-header>header {
     opacity: 1;
   }
 }
+
+/* fadeInUp keyframe for add-to-cart toast */
+@keyframes fadeInUp {
+  from {
+    transform: translate(-50%, 12px);
+    opacity: 0;
+  }
+  to {
+    transform: translate(-50%, 0);
+    opacity: 1;
+  }
+}

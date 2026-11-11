@@ -13,6 +13,7 @@ import { ProductCardComponent } from '../../components/product-card/product-card
 import { CategoryFilterComponent } from '../../components/category-filter/category-filter.component';
 import { ProductDetailModalComponent } from '../../components/product-detail-modal/product-detail-modal.component';
 import { CartDrawerComponent } from '../../../cart/components/cart-drawer/cart-drawer.component';
+import { CartService } from '../../../cart/services/cart.service';
 import { HeaderComponent } from '../../../../shared/ui/header/header.component';
 import { FooterComponent } from '../../../../shared/ui/footer/footer.component';
 import type { ProductListItem, Product } from '../../../../core/models/product.model';
@@ -36,6 +37,7 @@ import AOS from 'aos';
 export class HomeComponent implements OnInit, AfterViewInit {
   private readonly productsService = inject(ProductsService);
   private readonly categoriesService = inject(CategoriesService);
+  readonly cartService = inject(CartService);
 
   products = this.productsService.products;
   categories = this.categoriesService.categories;

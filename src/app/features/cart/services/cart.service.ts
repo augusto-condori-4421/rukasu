@@ -23,6 +23,10 @@ export class CartService {
 
   isOpen = signal(false);
 
+  /** Toast: name of the last product added. Cleared after a timeout. */
+  toastProductName = signal<string | null>(null);
+  private _toastTimer: ReturnType<typeof setTimeout> | null = null;
+
   openCart(): void { this.isOpen.set(true); }
   closeCart(): void { this.isOpen.set(false); }
   toggleCart(): void { this.isOpen.update(v => !v); }
@@ -40,7 +44,11 @@ export class CartService {
       return [...items, { product, quantity: 1 }];
     });
     this._save();
-    this.isOpen.set(true);
+
+    // Show toast instead of opening drawer
+    this.toastProductName.set(product.name);
+    if (this._toastTimer) clearTimeout(this._toastTimer);
+    this._toastTimer = setTimeout(() => this.toastProductName.set(null), 2500);
   }
 
   remove(productId: number): void {
